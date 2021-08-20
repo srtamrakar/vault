@@ -1,8 +1,8 @@
-import configparser
 import os
 import sqlite3
 import sys
 import unittest
+from configparser import ConfigParser
 from io import StringIO
 
 from MyVault.src import Vault
@@ -27,35 +27,33 @@ class Test:
 class _Config(Test):
 
     SECTION = "cipher"
-    CONFIG = {
-        "key": "replace-me",
-        "salt": "replace-me",
-        "iterations": 10,
-        "clipboard_ttl": 3,
-    }
 
     def __init__(self, config_type: str):
         super().__init__()
-        self.path = None
-        self.data = None
+        self.values = {
+            "key": "replace-me",
+            "salt": "replace-me",
+            "iterations": "10",
+            "clipboard_ttl": "3",
+        }
+        self.path = ""
+        self.config = ConfigParser()
         self.create_file(config_type=config_type)
 
     def create_file(self, config_type: str):
-        config = configparser.ConfigParser()
         if config_type == "bad_key":
-            config["bad_key"] = self.CONFIG
+            self.config["bad_key"] = self.values
         elif config_type == "bad_value":
-            self.CONFIG["iterations"] = "Ten"
-            config[self.SECTION] = self.CONFIG
+            self.values["iterations"] = "Ten"
+            self.config[self.SECTION] = self.values
         else:
             config_type = "good"
-            config[self.SECTION] = self.CONFIG
+            self.config[self.SECTION] = self.values
 
         self.path = os.path.join(self.DIR, f"{config_type}.cfg")
-        self.data = config
 
         with open(file=self.path, mode="w") as config_file:
-            config.write(fp=config_file)
+            self.config.write(fp=config_file)
 
     def __del__(self):
         if os.path.isfile(self.path) is True:
@@ -89,9 +87,7 @@ class TestEncryptionConfig(unittest.TestCase):
         config = _Config(config_type="good")
         vault = Vault(db_path=db.path, config_path=config.path)
         sys.stdout = sys.__stdout__
-        self.assertEqual(
-            int(config.data["cipher"]["clipboard_ttl"]), vault.clipboard_ttl
-        )
+        self.assertEqual(int(config.config["cipher"]["clipboard_ttl"]), vault.clipboard_ttl)
 
     def test_02_bad_key(self):
         sys.stdout = self.OUTPUT
@@ -118,9 +114,9 @@ class TestDatabase(unittest.TestCase):
     DB = _Database()
     CONFIG = _Config(config_type="good")
     CIPHER = AESEncryption(
-        key=CONFIG.data["cipher"]["key"],
-        salt=CONFIG.data["cipher"]["salt"],
-        iterations=int(CONFIG.data["cipher"]["iterations"]),
+        key=str(CONFIG.config["cipher"]["key"]),
+        salt=str(CONFIG.config["cipher"]["salt"]),
+        iterations=int(CONFIG.config["cipher"]["iterations"]),
     )
 
     FOLDER = "test_folder"
@@ -142,9 +138,7 @@ class TestDatabase(unittest.TestCase):
         sys.stdout = self.OUTPUT
         with self.assertRaises(SystemExit) as err:
             vault = Vault(db_path=self.DB.path, config_path=self.CONFIG.path)
-            _ = vault.copy(
-                folder=self.NONE_EXISTENT_FOLDER, name=self.NONE_EXISTENT_NAME, get=True
-            )
+            _ = vault.copy(folder=self.NONE_EXISTENT_FOLDER, name=self.NONE_EXISTENT_NAME, get=True)
         self.assertEqual(err.exception.code, exit_codes.SECRET_NOT_FOUND)
 
 

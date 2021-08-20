@@ -4,7 +4,7 @@ import shutil
 import sqlite3
 import sys
 from datetime import datetime
-from typing import NoReturn, Tuple
+from typing import Tuple
 
 from MyVault.src.statics import exit_codes, messages, prompts
 from MyVault.src.utils import AESEncryption, Database, clipboard, queries
@@ -12,9 +12,7 @@ from MyVault.src.utils import AESEncryption, Database, clipboard, queries
 
 class Vault(AESEncryption):
     def __init__(self, db_path: str, config_path: str):
-        key, salt, iterations, clipboard_ttl = self.__get_cipher_params(
-            config_path=config_path
-        )
+        key, salt, iterations, clipboard_ttl = self.__get_cipher_params(config_path=config_path)
         super().__init__(key=key, salt=salt, iterations=iterations)
         self.__set_db(db_path=db_path)
         self.__config_path = config_path
@@ -41,7 +39,7 @@ class Vault(AESEncryption):
             print(messages.CONFIG_VALUE_WARNING)
             sys.exit(exit_codes.INVALID_VALUE)
 
-    def __set_db(self, db_path: str) -> NoReturn:
+    def __set_db(self, db_path: str):
         if os.path.exists(db_path) is False:
             create = input(prompts.CREATE_SQLITE_DB_CONFIRM)
             if create != "yes":
@@ -55,7 +53,7 @@ class Vault(AESEncryption):
         self.db = Database(db_path=db_path)
         self.__db_path = db_path
 
-    def upsert(self, folder: str, name: str, secret: str) -> NoReturn:
+    def upsert(self, folder: str, name: str, secret: str):
         secret_encrypted = self.encrypt(plaintext=secret)
         try:
             self.db.insert_secret(folder=folder, name=name, secret=secret_encrypted)
@@ -69,12 +67,12 @@ class Vault(AESEncryption):
             self.db.update_secret(folder=folder, name=name, new_secret=secret_encrypted)
             print(messages.SECRET_UPDATED.format(folder, name))
 
-    def list_(self) -> NoReturn:
+    def list_(self):
         print(messages.FOLDERS_NAMES_PRINT)
         for (folder, name) in self.db.select_folder_and_names():
             print(f"{folder}/{name}")
 
-    def copy(self, folder: str, name: str, get: bool = False) -> NoReturn:
+    def copy(self, folder: str, name: str, get: bool = False):
         secret_encrypted = self.db.select_secret(folder=folder, name=name)
         if secret_encrypted is None:
             print(messages.SECRET_NOT_FOUND.format(folder, name))
@@ -92,12 +90,8 @@ class Vault(AESEncryption):
                 print(messages.SECRET_COPIED.format(folder, name, self.clipboard_ttl))
                 clipboard.copy(text=secret_decrypted, ttl_secs=self.clipboard_ttl)
 
-    def update_encryption(self, new_config_path: str) -> NoReturn:
-        update = input(
-            prompts.ENCRYPTION_UPDATE_CONFIRM.format(
-                self.__db_path, self.__config_path, new_config_path
-            )
-        )
+    def update_encryption(self, new_config_path: str):
+        update = input(prompts.ENCRYPTION_UPDATE_CONFIRM.format(self.__db_path, self.__config_path, new_config_path))
         if update != "yes":
             print(messages.ENCRYPTION_ABORTED)
             sys.exit(0)
@@ -122,7 +116,7 @@ class Vault(AESEncryption):
         shutil.copy2(self.__db_path, new_path)
         return new_path
 
-    def remove(self, folder: str, name: str) -> NoReturn:
+    def remove(self, folder: str, name: str):
         remove = input(prompts.REMOVE_SECRET_CONFIRM.format(folder, name))
         if remove != "yes":
             print(messages.REMOVE_ABORTED)
@@ -131,7 +125,7 @@ class Vault(AESEncryption):
         self.db.delete_secret(folder=folder, name=name)
         print(messages.SECRET_DELETED.format(folder, name))
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> NoReturn:
+    def __exit__(self, exc_type, exc_val, exc_tb):
         if isinstance(self.db, Database):
             self.db.close()
             print(messages.DB_CONN_CLOSED)

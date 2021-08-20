@@ -18,9 +18,7 @@ def db_path_config_path(is_mandatory: bool = False, change_config: bool = False)
             help="Path to the encryption config file.",
         )(function)
         if change_config is True:
-            function = click.argument(
-                "new-config", type=click.Path(dir_okay=False, exists=True)
-            )(function)
+            function = click.argument("new-config", type=click.Path(dir_okay=False, exists=True))(function)
         return function
 
     return decorator

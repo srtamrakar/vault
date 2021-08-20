@@ -115,7 +115,7 @@ Update encryption configuration for the vault.
 $ myvault update --db=<path_to_sqlite3_file> --config=<path_to_config_file> <path_to_new_config_file>
 ```
 
-:warning: Make sure to pass the correct path to `--config` once the encryption config is updated. Otherwise, `copy` could either return an empty string `""` or exit with the status `INVALID_CONFIG_ERROR`. 
+:warning: Make sure to pass the correct path to `--config` once the encryption config is updated. Otherwise, `copy` could either return an empty string `""` or exit with the status `INVALID_CONFIG_ERROR`.
 
 ### Recommendations
 

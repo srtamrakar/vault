@@ -14,7 +14,7 @@ INSERT INTO local_vault VALUES (?, ?, ?, ?, ?);
 """
 
 UPDATE_SECRET = """
-UPDATE local_vault 
+UPDATE local_vault
 SET secret=?,
     last_updated_at=?
 WHERE folder=?

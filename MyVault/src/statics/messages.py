@@ -11,7 +11,7 @@ Cannot continue without creating a vault database.
 """
 
 CONFIG_KEY_WARNING = """
-Config file is missing either a section: `cipher`, 
+Config file is missing either a section: `cipher`,
 or the key(s): `KEY`, `SALT`, `ITERATIONS`, `CLIPBOARD_TTL`.
 """
 
@@ -55,7 +55,7 @@ Please confirm that the config file is correctly upsert and try again.
 """
 
 ENCRYPTION_UPDATED = """
-A copy of vault database with old encryption config is saved to 
+A copy of vault database with old encryption config is saved to
 `{}` for backup.
 
 Encryption is updated using new config file.

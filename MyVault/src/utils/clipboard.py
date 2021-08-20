@@ -1,10 +1,9 @@
 import time
-from typing import NoReturn
 
 import pyperclip
 
 
-def copy(text: str, ttl_secs: int = 10) -> NoReturn:
+def copy(text: str, ttl_secs: int = 10):
     pyperclip.copy(text)
     try:
         time.sleep(ttl_secs)

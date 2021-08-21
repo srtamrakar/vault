@@ -1,6 +1,6 @@
 # MyVault
 
-This is a simple, offline vault to store secrets e.g. your password.
+A simple, offline vault to store secrets e.g. your password.
 
 * SQLite database is used for storage.
 * Each secret is AES-256 encrypted using an SHA-256 hash generated from a key*, salt*, and iterations*.
@@ -16,12 +16,6 @@ Requirement: Python 3.7+
 ### Source: PyPi
 ```bash
 $ pip3 install MyVault
-```
-
-### Source: Git
-```bash
-$ git clone https://github.com/srtamrakar/vault
-$ pip3 install .
 ```
 
 ## Configuration

@@ -1,9 +1,38 @@
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel>=0.36"
+[tool.poetry]
+name = "MyVault"
+version = "0.0.2"
+description = "A simple, offline vault to store secrets e.g. your password."
+authors = [
+    "Samyak"
 ]
-build-backend = "setuptools.build_meta"
+readme = "README.md"
+homepage = "https://github.com/srtamrakar/vault"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security :: Cryptography"
+]
+
+[tool.poetry.scripts]
+myvault = "MyVault.cli:commands"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^7.1"
+pycryptodome = "^3.10"
+pyperclip = "^1.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pre-commit = "^2.14.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 120

@@ -3,7 +3,7 @@ import base64
 from Crypto import Random
 from Crypto.Cipher import AES
 
-from MyVault.src.utils import hash
+from src.utils import hash
 
 
 class AESEncryption:

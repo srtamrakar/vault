@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
-myvault = "MyVault.cli:commands"
+myvault = "src.cli:commands"
 
 [tool.poetry.dependencies]
 python = "^3.7"

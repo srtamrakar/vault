@@ -1,6 +1,6 @@
 import click
 
-from MyVault.src import Vault
+from src import Vault
 
 
 def db_path_config_path(is_mandatory: bool = False, change_config: bool = False):

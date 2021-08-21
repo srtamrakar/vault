@@ -5,9 +5,9 @@ import unittest
 from configparser import ConfigParser
 from io import StringIO
 
-from MyVault.src import Vault
-from MyVault.src.statics import exit_codes
-from MyVault.src.utils import AESEncryption
+from src import Vault
+from src.statics import exit_codes
+from src.utils import AESEncryption
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 

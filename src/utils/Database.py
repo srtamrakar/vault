@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 from typing import Generator
 
-from MyVault.src.utils import queries
+from src.utils import queries
 
 
 class Database:

@@ -6,8 +6,8 @@ import sys
 from datetime import datetime
 from typing import Tuple
 
-from MyVault.src.statics import exit_codes, messages, prompts
-from MyVault.src.utils import AESEncryption, Database, clipboard, queries
+from src.statics import exit_codes, messages, prompts
+from src.utils import AESEncryption, Database, clipboard, queries
 
 
 class Vault(AESEncryption):

@@ -1,6 +1,6 @@
 import unittest
 
-from MyVault.src.utils import AESEncryption
+from src.utils import AESEncryption
 
 
 class TestUtils(unittest.TestCase):

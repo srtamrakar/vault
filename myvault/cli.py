@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import click
 
-from MyVault.src import Vault
+from myvault.statics import Prompt
+from myvault.utils import Vault
 
 
 def db_path_config_path(is_mandatory: bool = False, change_config: bool = False):
@@ -8,18 +11,21 @@ def db_path_config_path(is_mandatory: bool = False, change_config: bool = False)
         function = click.option(
             "--db",
             required=True,
-            type=click.Path(dir_okay=False, exists=is_mandatory),
+            type=click.Path(dir_okay=False, exists=is_mandatory, path_type=Path),
             help="Path to the vault database.",
         )(function)
         function = click.option(
             "--config",
             required=True,
-            type=click.Path(dir_okay=False, exists=True),
+            type=click.Path(dir_okay=False, exists=True, path_type=Path),
             help="Path to the encryption config file.",
         )(function)
         if change_config is True:
-            function = click.argument(
-                "new-config", type=click.Path(dir_okay=False, exists=True)
+            function = click.option(
+                "--new-config",
+                required=True,
+                type=click.Path(dir_okay=False, exists=True, path_type=Path),
+                help="Path to the new encryption config file.",
             )(function)
         return function
 
@@ -40,12 +46,8 @@ def main():
 @main.command(help="Add a secret (will be prompted) to the vault.")
 @db_path_config_path(is_mandatory=False, change_config=False)
 @folder_name
-def add(db: str, config: str, folder: str, name: str):
-    secret = click.prompt(
-        text="Secret to be added to the vault",
-        confirmation_prompt=True,
-        hide_input=True,
-    )
+def add(db: Path, config: Path, folder: str, name: str):
+    secret = click.prompt(text=Prompt.ADD_SECRET.formatted(), confirmation_prompt=True, hide_input=True)
     with Vault(db_path=db, config_path=config) as vault:
         vault.upsert(folder=folder, name=name, secret=secret)
 
@@ -53,21 +55,21 @@ def add(db: str, config: str, folder: str, name: str):
 @main.command(help="Copy the decrypted secret from the vault to the clipboard.")
 @db_path_config_path(is_mandatory=True, change_config=False)
 @folder_name
-def copy(db: str, config: str, folder: str, name: str):
+def copy(db: Path, config: Path, folder: str, name: str):
     with Vault(db_path=db, config_path=config) as vault:
         vault.copy(folder=folder, name=name)
 
 
 @main.command(help="List all the folders and names of secrets.")
 @db_path_config_path(is_mandatory=True, change_config=False)
-def list(db: str, config: str):
+def list(db: Path, config: Path):
     with Vault(db_path=db, config_path=config) as vault:
         vault.list_()
 
 
 @main.command(help="Update encryption configuration for the vault.")
 @db_path_config_path(is_mandatory=True, change_config=True)
-def update(db: str, config: str, new_config: str):
+def update(db: Path, config: Path, new_config: Path):
     with Vault(db_path=db, config_path=config) as vault:
         vault.update_encryption(new_config_path=new_config)
 
@@ -75,7 +77,7 @@ def update(db: str, config: str, new_config: str):
 @main.command(help="Delete a secret by its folder and name.")
 @db_path_config_path(is_mandatory=True, change_config=False)
 @folder_name
-def remove(db: str, config: str, folder: str, name: str):
+def remove(db: Path, config: Path, folder: str, name: str):
     with Vault(db_path=db, config_path=config) as vault:
         vault.remove(folder=folder, name=name)
 

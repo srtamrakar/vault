@@ -1,6 +1,57 @@
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel>=0.36"
+[tool.poetry]
+name = "MyVault"
+version = "0.0.2"
+description = "A simple, offline vault to store secrets e.g. your password."
+authors = [
+    "Samyak Tamrakar"
 ]
-build-backend = "setuptools.build_meta"
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/srtamrakar/vault"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security :: Cryptography"
+]
+
+[tool.poetry.scripts]
+myvault = "myvault.cli:commands"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^8.0"
+pycryptodome = "^3.10"
+pyperclip = "^1.8"
+colorama = "^0.4.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pre-commit = "^2.14.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.mypy]
+ignore-missing-imports = true
+
+[tool.sqlfluff]
+dialect = "sqlite3"
+
+[tool.sqlfluff.rules]
+tab_space_size = 2
+max_line_length = 120
+indent_unit = "space"
+comma_style = "trailing"
+allow_scalar = true

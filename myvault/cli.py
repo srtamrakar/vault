@@ -2,7 +2,8 @@ from pathlib import Path
 
 import click
 
-from MyVault import Vault
+from myvault.statics import Prompt
+from myvault.utils import Vault
 
 
 def db_path_config_path(is_mandatory: bool = False, change_config: bool = False):
@@ -10,17 +11,22 @@ def db_path_config_path(is_mandatory: bool = False, change_config: bool = False)
         function = click.option(
             "--db",
             required=True,
-            type=click.Path(dir_okay=False, exists=is_mandatory),
+            type=click.Path(dir_okay=False, exists=is_mandatory, path_type=Path),
             help="Path to the vault database.",
         )(function)
         function = click.option(
             "--config",
             required=True,
-            type=click.Path(dir_okay=False, exists=True),
+            type=click.Path(dir_okay=False, exists=True, path_type=Path),
             help="Path to the encryption config file.",
         )(function)
         if change_config is True:
-            function = click.argument("new-config", type=click.Path(dir_okay=False, exists=True))(function)
+            function = click.option(
+                "--new-config",
+                required=True,
+                type=click.Path(dir_okay=False, exists=True, path_type=Path),
+                help="Path to the new encryption config file.",
+            )(function)
         return function
 
     return decorator
@@ -41,11 +47,7 @@ def main():
 @db_path_config_path(is_mandatory=False, change_config=False)
 @folder_name
 def add(db: Path, config: Path, folder: str, name: str):
-    secret = click.prompt(
-        text="Secret to be added to the vault",
-        confirmation_prompt=True,
-        hide_input=True,
-    )
+    secret = click.prompt(text=Prompt.ADD_SECRET.formatted(), confirmation_prompt=True, hide_input=True)
     with Vault(db_path=db, config_path=config) as vault:
         vault.upsert(folder=folder, name=name, secret=secret)
 

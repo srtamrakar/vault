@@ -99,7 +99,7 @@ $ myvault copy --db=<path_to_sqlite3_file> --config=<path_to_config_file> instag
 
 Delete a secret by its folder and name.
 ```bash
-$ myvault delete --db=<path_to_sqlite3_file> --config=<path_to_config_file> instagram social-media
+$ myvault remove --db=<path_to_sqlite3_file> --config=<path_to_config_file> instagram social-media
 ```
 
 #### Update encryption configuration
@@ -115,7 +115,7 @@ $ myvault update --db=<path_to_sqlite3_file> --config=<path_to_config_file> <pat
 
 1. Use an external drive to store the vault database, as well as the config file so that the vault is **isolated and mobile**.
 1. Create aliases so that the **CLI commands are shortened**.
-   1. Add the following lines in *.bashrc*:
+   1. Add the following lines in *shell profile*:
         ```text
         MYVAULT_DB="<absolute_path_to_db>"
         MYVAULT_CONFIG="<absolute_path_to_config>"
@@ -124,10 +124,6 @@ $ myvault update --db=<path_to_sqlite3_file> --config=<path_to_config_file> <pat
         alias vault-ls="myvault list --db=$MYVAULT_DB --config=$MYVAULT_CONFIG"
         alias vault-up="myvault update --db=$MYVAULT_DB --config=$MYVAULT_CONFIG"
         alias vault-rm="myvault remove --db=$MYVAULT_DB --config=$MYVAULT_CONFIG"
-        ```
-   1. Source the *.bashrc* file:
-        ```bash
-        $ source ~/.bashrc
         ```
    1. Shortened cli commands:
        ```bash

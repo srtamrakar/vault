@@ -3,7 +3,7 @@ name = "MyVault"
 version = "0.0.2"
 description = "A simple, offline vault to store secrets e.g. your password."
 authors = [
-    "Samyak"
+    "Samyak Tamrakar"
 ]
 readme = "README.md"
 license = "MIT"
@@ -19,13 +19,14 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
-myvault = "src.cli:commands"
+myvault = "myvault.cli:commands"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-click = "^7.1"
+click = "^8.0"
 pycryptodome = "^3.10"
 pyperclip = "^1.8"
+colorama = "^0.4.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

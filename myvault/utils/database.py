@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Generator
 
-from MyVault.src.statics import Query
+from myvault.statics import Query
 
 
 class Database:

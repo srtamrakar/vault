@@ -7,9 +7,8 @@ from enum import Enum
 from io import StringIO
 from pathlib import Path
 
-from MyVault import Vault
-from MyVault.src.encryption import AESEncryption
-from MyVault.src.statics import ExitCode
+from myvault.statics import ExitCode
+from myvault.utils import AESEncryption, Vault
 
 TEST_DIR = Path(__file__).parent
 

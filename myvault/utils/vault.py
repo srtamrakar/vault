@@ -9,9 +9,8 @@ from typing import Tuple
 
 import pyperclip
 
-from MyVault.src.database import Database
-from MyVault.src.encryption import AESEncryption
-from MyVault.src.statics import ExitCode, Message, Prompt, Query
+from myvault.statics import ExitCode, Message, Prompt, Query
+from myvault.utils import AESEncryption, Database
 
 
 class Vault(AESEncryption):
@@ -45,7 +44,7 @@ class Vault(AESEncryption):
 
     def __set_db(self, db_path: Path):
         if db_path.is_file() is False:
-            create = input(Prompt.CREATE_SQLITE_DB_CONFIRM)
+            create = input(Prompt.CREATE_SQLITE_DB_CONFIRM.formatted())
             if create != "yes":
                 print(Message.DB_REQUIRED_WARNING)
                 sys.exit(0)
@@ -124,13 +123,17 @@ class Vault(AESEncryption):
             update_params.append((new_secret_encrypted, time_now, folder, name))
 
         backup_db_path = self.__backup_db()
-        self.db.execute_many(Query.UPDATE_SECRET, update_params)
-        print(Message.ENCRYPTION_UPDATED.formatted(db_path=backup_db_path))
+        try:
+            self.db.execute_many(Query.UPDATE_SECRET.formatted(), update_params)
+            print(Message.ENCRYPTION_UPDATED.formatted(db_path=backup_db_path))
+        except Exception:
+            print(Message.ENCRYPTION_UPDATE_FAILED)
+            backup_db_path.unlink()
 
     def __backup_db(self) -> Path:
         time_now = datetime.now().strftime("%Y%m%d_%H%M%S")
         extension = self.__db_path.suffix
-        new_path = self.__db_path.with_suffix(f".backup_{time_now}.{extension}")
+        new_path = self.__db_path.with_suffix(f".backup_{time_now}{extension}")
         shutil.copy2(self.__db_path, new_path)
         return new_path
 

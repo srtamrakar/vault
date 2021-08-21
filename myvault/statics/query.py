@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from MyVault.src.helpers import FormattedEnum
-
+from myvault.statics.formatted_enum import FormattedEnum
 
 SQL_DIR = Path(__file__).parent.parent / "sql"
 

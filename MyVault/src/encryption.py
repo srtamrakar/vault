@@ -1,14 +1,22 @@
 import base64
+import hashlib
 
 from Crypto import Random
 from Crypto.Cipher import AES
 
-from src.utils import hash
-
 
 class AESEncryption:
     def __init__(self, key: str, salt: str, iterations: int):
-        self.key = hash.get_sha256(text=key, salt=salt, iterations=iterations)
+        self.key = self.__get_sha256(text=key, salt=salt, iterations=iterations)
+
+    @staticmethod
+    def __get_sha256(text: str, salt: str = "", iterations: int = 10000) -> bytes:
+        return hashlib.pbkdf2_hmac(
+            hash_name="sha256",
+            password=text.encode(encoding="utf-8"),
+            salt=salt.encode(),
+            iterations=iterations,
+        )
 
     def encrypt(self, plaintext: str) -> str:
         raw_padded = self.__get_padded_text(text=plaintext)

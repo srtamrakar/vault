@@ -6,6 +6,7 @@ authors = [
     "Samyak"
 ]
 readme = "README.md"
+license = "MIT"
 homepage = "https://github.com/srtamrakar/vault"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -43,3 +44,13 @@ line_length = 120
 
 [tool.mypy]
 ignore-missing-imports = true
+
+[tool.sqlfluff]
+dialect = "sqlite3"
+
+[tool.sqlfluff.rules]
+tab_space_size = 2
+max_line_length = 120
+indent_unit = "space"
+comma_style = "trailing"
+allow_scalar = true
